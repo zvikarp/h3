@@ -7,19 +7,20 @@ import 'dart:io' show Platform;
 
 String _platformPath(String name) {
   if (Platform.isLinux || Platform.isAndroid) {
-    return 'ios/build/lib' + name + '.so';
+    return 'ios/lib/lib' + name + '.so';
   }
   if (Platform.isMacOS) {
-    return 'ios/build/lib' + name + '.dylib';
+    return 'ios/lib/lib' + name + '.dylib';
   }
   if (Platform.isWindows) {
-    return 'ios/build/' + name + '.dll';
+    return 'ios/lib/' + name + '.dll';
   }
 
   throw Exception('Platform not implemented');
 }
 
 ffi.DynamicLibrary dlopenPlatformSpecific(String name) {
+  if (Platform.isIOS) return ffi.DynamicLibrary.process();
   final String fullPath = _platformPath(name);
   return ffi.DynamicLibrary.open(fullPath);
 }
