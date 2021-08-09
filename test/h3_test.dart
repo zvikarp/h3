@@ -5,7 +5,7 @@
 import 'dart:convert';
 import 'dart:ffi';
 
-import 'package:h3/main.dart';
+import 'package:h3/h3.dart';
 import 'package:test/test.dart';
 
 const double precisionErrorTolerance = 1e-10;

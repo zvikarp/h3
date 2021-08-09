@@ -4,7 +4,7 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'package:h3/main.dart';
+import 'package:h3/h3.dart';
 
 class GeoCoordNative extends Struct {
   factory GeoCoordNative.allocate(double lat, double lon) {
