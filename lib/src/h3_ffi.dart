@@ -2,8 +2,11 @@ part of h3;
 
 bool _initialized = false;
 
-void initializeH3([LibraryLoader? loader]) {
+void initializeH3() {
   assert(!_initialized);
+  LibraryLoader loader = (String name) => Platform.isAndroid
+      ? DynamicLibrary.open("lib$name.so")
+      : DynamicLibrary.process();
   bindings.initialize(loader);
   _initialized = true;
 }
@@ -29,7 +32,8 @@ GeoCoord h3ToGeo(int h3) {
   bindings.h3ToGeo(h3, g);
 
   final GeoCoordNative center = g.ref;
-  final GeoCoord result = GeoCoord(lat: center.lat, lon: center.lon);
+  final GeoCoord result =
+      GeoCoord(lat: center.lat ?? 0.0, lon: center.lon ?? 0.0);
   calloc.free(g);
   return result;
 }
@@ -44,7 +48,7 @@ List<GeoCoord> h3ToGeoBoundary(int h3) {
   final List<GeoCoord> coordinates = <GeoCoord>[];
   for (int i = 0; i < verts; i++) {
     final GeoCoordNative vert = gp.elementAt(i).ref;
-    coordinates.add(GeoCoord(lat: vert.lat, lon: vert.lon));
+    coordinates.add(GeoCoord(lat: vert.lat ?? 0.0, lon: vert.lon ?? 0.0));
   }
   calloc.free(gp);
 

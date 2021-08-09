@@ -23,11 +23,11 @@ class GeoCoordNative extends Struct {
 
   /// latitude in radians
   @Double()
-  double lat;
+  double? lat;
 
   /// longitude in radians
   @Double()
-  double lon;
+  double? lon;
 
   @override
   String toString() => 'GeoCoordNative{lat: $lat, lon: $lon}';
