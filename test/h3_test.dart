@@ -10,30 +10,33 @@ import 'package:test/test.dart';
 const double precisionErrorTolerance = 1e-10;
 
 void main() {
-  setUpAll(() => initializeH3());
+  setUpAll(() => h3.init());
 
-  test('geoToH3', () {
-    expect(geoToH3(GeoCoord.degrees(lat: 79.2423985098, lon: 38.0234070080), 0),
+  test('fromGeo', () {
+    expect(
+        h3.fromGeo(GeoCoord.degrees(lat: 79.2423985098, lon: 38.0234070080), 0),
         0x8001fffffffffff);
     expect(
-        geoToH3(GeoCoord.degrees(lat: 79.2209863563, lon: -107.4292022430), 0),
+        h3.fromGeo(
+            GeoCoord.degrees(lat: 79.2209863563, lon: -107.4292022430), 0),
         0x8003fffffffffff);
     expect(
-        geoToH3(GeoCoord.degrees(lat: 74.9284343892, lon: 145.3562419228), 0),
+        h3.fromGeo(
+            GeoCoord.degrees(lat: 74.9284343892, lon: 145.3562419228), 0),
         0x8005fffffffffff);
   });
 
-  test('h3ToGeo', () {
-    expect(h3ToGeo(0x8001fffffffffff),
+  test('toGeo', () {
+    expect(h3.toGeo(0x8001fffffffffff),
         GeoCoord.degrees(lat: 79.2423985098, lon: 38.0234070080));
-    expect(h3ToGeo(0x8003fffffffffff),
+    expect(h3.toGeo(0x8003fffffffffff),
         GeoCoord.degrees(lat: 79.2209863563, lon: -107.4292022430));
-    expect(h3ToGeo(0x8005fffffffffff),
+    expect(h3.toGeo(0x8005fffffffffff),
         GeoCoord.degrees(lat: 74.9284343892, lon: 145.3562419228));
   });
 
-  test('h3ToGeoBoundary', () {
-    expect(h3ToGeoBoundary(0x8a8f5a980387fff), <GeoCoord>[
+  test('toGeoBoundary', () {
+    expect(h3.toGeoBoundary(0x8a8f5a980387fff), <GeoCoord>[
       GeoCoord.degrees(lat: -9.361697060, lon: -78.582037761),
       GeoCoord.degrees(lat: -9.362128022, lon: -78.582655266),
       GeoCoord.degrees(lat: -9.362873639, lon: -78.582586800),
@@ -41,7 +44,7 @@ void main() {
       GeoCoord.degrees(lat: -9.362757328, lon: -78.581283323),
       GeoCoord.degrees(lat: -9.362011713, lon: -78.581351792),
     ]);
-    expect(h3ToGeoBoundary(0x8a2769da3587fff), <GeoCoord>[
+    expect(h3.toGeoBoundary(0x8a2769da3587fff), <GeoCoord>[
       GeoCoord.degrees(lat: 44.641731384, lon: -82.135842406),
       GeoCoord.degrees(lat: 44.641506337, lon: -82.136798146),
       GeoCoord.degrees(lat: 44.640824436, lon: -82.136981488),
@@ -49,7 +52,7 @@ void main() {
       GeoCoord.degrees(lat: 44.640592624, lon: -82.135253397),
       GeoCoord.degrees(lat: 44.641274521, lon: -82.135070029),
     ]);
-    expect(h3ToGeoBoundary(0x8a3d6628221ffff), <GeoCoord>[
+    expect(h3.toGeoBoundary(0x8a3d6628221ffff), <GeoCoord>[
       GeoCoord.degrees(lat: 38.026712729, lon: 85.707804486),
       GeoCoord.degrees(lat: 38.025989433, lon: 85.707767610),
       GeoCoord.degrees(lat: 38.025619227, lon: 85.708541471),
@@ -61,12 +64,12 @@ void main() {
 
   test('maxKringSize', () {
     for (int i = 0; i < 5; i++) {
-      expect(maxKringSize(i), 3 * i * (i + 1) + 1);
+      expect(h3.maxKringSize(i), 3 * i * (i + 1) + 1);
     }
   });
 
   test('hexRange', () {
-    final List<int> result = hexRange(0x845ad1bffffffff, 2);
+    final List<int> result = h3.hexRange(0x845ad1bffffffff, 2);
 
     expect(
       result,
@@ -95,7 +98,7 @@ void main() {
   });
 
   test('hexRangeDistances', () {
-    final Map<int, int> result = hexRangeDistances(0x845ad1bffffffff, 2);
+    final Map<int, int> result = h3.hexRangeDistances(0x845ad1bffffffff, 2);
 
     expect(
       result,
@@ -124,7 +127,7 @@ void main() {
   });
 
   test('hexRanges', () {
-    final List<int> result = hexRanges(<int>{
+    final List<int> result = h3.hexRanges(<int>{
       0x89283080ddbffff,
       0x89283080c37ffff,
       0x89283080c27ffff,
@@ -183,7 +186,7 @@ void main() {
   });
 
   test('kRing', () {
-    final List<int> result = kRing(0x89283082b7bffff, 2);
+    final List<int> result = h3.kRing(0x89283082b7bffff, 2);
 
     expect(
       result,
@@ -212,7 +215,7 @@ void main() {
   });
 
   test('kRingDistances', () {
-    final Map<int, int> result = kRingDistances(0x89283082b7bffff, 3);
+    final Map<int, int> result = h3.kRingDistances(0x89283082b7bffff, 3);
 
     expect(
       result,
@@ -259,11 +262,11 @@ void main() {
   });
 
   test('hexRing', () {
-    List<int> result = hexRing(0x89283080dcbffff, 0);
+    List<int> result = h3.hexRing(0x89283080dcbffff, 0);
     expect(result.length, 1);
     expect(result.first, 0x89283080dcbffff);
 
-    result = hexRing(0x89283080dcbffff, 1);
+    result = h3.hexRing(0x89283080dcbffff, 1);
     expect(
       result,
       <int>[
@@ -301,10 +304,11 @@ void main() {
       ],
     ];
 
-    expect(maxPolyfillSize(GeoPolygon(geofence, <List<GeoCoord>>[]), 9), 5613);
-    expect(maxPolyfillSize(GeoPolygon(geofence, holes), 9), 5613);
     expect(
-        maxPolyfillSize(GeoPolygon(emptyGeofence, <List<GeoCoord>>[]), 9), 15);
+        h3.maxPolyfillSize(GeoPolygon(geofence, <List<GeoCoord>>[]), 9), 5613);
+    expect(h3.maxPolyfillSize(GeoPolygon(geofence, holes), 9), 5613);
+    expect(h3.maxPolyfillSize(GeoPolygon(emptyGeofence, <List<GeoCoord>>[]), 9),
+        15);
   });
 
   test('polyfill', () {
@@ -331,13 +335,13 @@ void main() {
       ],
     ];
 
-    List<int> result = polyfill(GeoPolygon(geofence, <List<GeoCoord>>[]), 9);
+    List<int> result = h3.polyfill(GeoPolygon(geofence, <List<GeoCoord>>[]), 9);
     expect(result.where((int it) => it != 0).length, 1253);
 
-    result = polyfill(GeoPolygon(geofence, holes), 9);
+    result = h3.polyfill(GeoPolygon(geofence, holes), 9);
     expect(result.where((int it) => it != 0).length, 1214);
 
-    result = polyfill(GeoPolygon(emptyGeofence, <List<GeoCoord>>[]), 9);
+    result = h3.polyfill(GeoPolygon(emptyGeofence, <List<GeoCoord>>[]), 9);
     expect(result.where((int it) => it != 0).length, 0);
   });
 }
@@ -353,8 +357,10 @@ String _printGeoJson(List<int> data) {
   return value;
 }
 
-Map<String, dynamic> _h3ToGeoJson(int h3, [Map<String, dynamic>? properties]) {
-  final List<List<double>> coordinates = h3ToGeoBoundary(h3)
+Map<String, dynamic> _h3ToGeoJson(int h3Data,
+    [Map<String, dynamic>? properties]) {
+  final List<List<double>> coordinates = h3
+      .toGeoBoundary(h3Data)
       .map((GeoCoord it) => <double>[it.lonDeg, it.latDeg])
       .toList();
 

@@ -3,7 +3,7 @@ import 'package:h3/h3.dart';
 
 void main() {
 //  initializeH3((String name) => DynamicLibrary.process());
-  initializeH3();
+  h3.init();
 
   runApp(MyApp());
 }
@@ -27,13 +27,13 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('0x${geoToH3(
-            GeoCoord.degrees(
-              lat: 40.68942184369929,
-              lon: -74.04443139990863,
-            ),
-            10,
-          ).toRadixString(16).toUpperCase()}'),
+          child: Text('0x${h3.fromGeo(
+                GeoCoord.degrees(
+                  lat: 40.68942184369929,
+                  lon: -74.04443139990863,
+                ),
+                10,
+              ).toRadixString(16).toUpperCase()}'),
         ),
       ),
     );
