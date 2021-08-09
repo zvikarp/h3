@@ -355,7 +355,7 @@ String _printGeoJson(List<int> data) {
   return value;
 }
 
-Map<String, dynamic> _h3ToGeoJson(int h3, [Map<String, dynamic> properties]) {
+Map<String, dynamic> _h3ToGeoJson(int h3, [Map<String, dynamic>? properties]) {
   final List<List<double>> coordinates = h3ToGeoBoundary(h3)
       .map((GeoCoord it) => <double>[it.lonDeg, it.latDeg])
       .toList();

@@ -2,7 +2,7 @@ part of h3;
 
 bool _initialized = false;
 
-void initializeH3([LibraryLoader loader]) {
+void initializeH3([LibraryLoader? loader]) {
   assert(!_initialized);
   bindings.initialize(loader);
   _initialized = true;
@@ -17,7 +17,7 @@ int geoToH3(GeoCoord g, int resolution) {
 
   final Pointer<GeoCoordNative> pointer = g._pointer;
   final int geoToH3 = bindings.geoToH3(pointer, resolution);
-  free(pointer);
+  calloc.free(pointer);
   return geoToH3;
 }
 
@@ -25,12 +25,12 @@ int geoToH3(GeoCoord g, int resolution) {
 GeoCoord h3ToGeo(int h3) {
   assert(_initialized);
 
-  final Pointer<GeoCoordNative> g = allocate<GeoCoordNative>();
+  final Pointer<GeoCoordNative> g = calloc<GeoCoordNative>();
   bindings.h3ToGeo(h3, g);
 
   final GeoCoordNative center = g.ref;
   final GeoCoord result = GeoCoord(lat: center.lat, lon: center.lon);
-  free(g);
+  calloc.free(g);
   return result;
 }
 
@@ -38,7 +38,7 @@ GeoCoord h3ToGeo(int h3) {
 List<GeoCoord> h3ToGeoBoundary(int h3) {
   assert(_initialized);
 
-  final Pointer<GeoCoordNative> gp = allocate<GeoCoordNative>(count: 100);
+  final Pointer<GeoCoordNative> gp = calloc<GeoCoordNative>(100);
   final int verts = bindings.h3ToGeoBoundary(h3, gp);
 
   final List<GeoCoord> coordinates = <GeoCoord>[];
@@ -46,7 +46,7 @@ List<GeoCoord> h3ToGeoBoundary(int h3) {
     final GeoCoordNative vert = gp.elementAt(i).ref;
     coordinates.add(GeoCoord(lat: vert.lat, lon: vert.lon));
   }
-  free(gp);
+  calloc.free(gp);
 
   return coordinates;
 }
@@ -69,12 +69,12 @@ List<int> hexRange(int origin, int k) {
   assert(k >= 0);
 
   final int size = maxKringSize(k);
-  final Pointer<Uint64> out = allocate<Uint64>(count: size);
+  final Pointer<Uint64> out = calloc<Uint64>(size);
   final int result = bindings.hexRange(origin, k, out);
 
   if (result == 0) {
     final List<int> list = out.asTypedList(size).buffer.asUint64List().toList();
-    free(out);
+    calloc.free(out);
     return list;
   } else {
     if (result == 1) {
@@ -101,8 +101,8 @@ Map<int, int> hexRangeDistances(int origin, int k) {
   assert(k >= 0);
 
   final int size = maxKringSize(k);
-  final Pointer<Uint64> out = allocate<Uint64>(count: size);
-  final Pointer<Int32> distances = allocate<Int32>(count: size);
+  final Pointer<Uint64> out = calloc<Uint64>(size);
+  final Pointer<Int32> distances = calloc<Int32>(size);
   final int result = bindings.hexRangeDistances(origin, k, out, distances);
 
   if (result == 0) {
@@ -110,8 +110,8 @@ Map<int, int> hexRangeDistances(int origin, int k) {
         out.asTypedList(size).buffer.asUint64List(),
         distances.asTypedList(size).buffer.asInt32List());
 
-    free(out);
-    free(distances);
+    calloc.free(out);
+    calloc.free(distances);
 
     return map;
   } else {
@@ -133,8 +133,8 @@ Map<int, int> hexRangeDistances(int origin, int k) {
 /// in the pentagon distortion area.
 List<int> hexRanges(Set<int> h3Set, int k) {
   final int size = maxKringSize(k) * h3Set.length;
-  final Pointer<Uint64> out = allocate(count: size);
-  final Pointer<Uint64> h3SetPtr = allocate(count: h3Set.length);
+  final Pointer<Uint64> out = calloc(size);
+  final Pointer<Uint64> h3SetPtr = calloc(h3Set.length);
   for (int i = 0; i < h3Set.length; i++) {
     h3SetPtr.elementAt(i).value = (h3Set.elementAt(i));
   }
@@ -143,7 +143,7 @@ List<int> hexRanges(Set<int> h3Set, int k) {
 
   if (result == 0) {
     final List<int> list = out.asTypedList(size).buffer.asUint64List().toList();
-    free(out);
+    calloc.free(out);
     return list;
   } else {
     if (result == 1) {
@@ -166,12 +166,12 @@ List<int> kRing(int origin, int k) {
   assert(k >= 0);
 
   final int size = maxKringSize(k);
-  final Pointer<Uint64> out = allocate(count: size);
+  final Pointer<Uint64> out = calloc(size);
 
   bindings.kRing(origin, k, out);
 
   final List<int> list = out.asTypedList(size).buffer.asUint64List().toList();
-  free(out);
+  calloc.free(out);
   return list;
 }
 
@@ -186,16 +186,16 @@ Map<int, int> kRingDistances(int origin, int k) {
   assert(k >= 0);
 
   final int size = maxKringSize(k);
-  final Pointer<Uint64> out = allocate(count: size);
-  final Pointer<Int32> distances = allocate(count: size);
+  final Pointer<Uint64> out = calloc(size);
+  final Pointer<Int32> distances = calloc(size);
   bindings.kRingDistances(origin, k, out, distances);
 
   final Map<int, int> map = Map<int, int>.fromIterables(
       out.asTypedList(size).buffer.asUint64List(),
       distances.asTypedList(size).buffer.asInt32List());
 
-  free(out);
-  free(distances);
+  calloc.free(out);
+  calloc.free(distances);
 
   return map;
 }
@@ -214,13 +214,13 @@ List<int> hexRing(int origin, int k) {
   assert(k >= 0);
 
   final int size = k == 0 ? 1 : 6 * k;
-  final Pointer<Uint64> out = allocate(count: size);
+  final Pointer<Uint64> out = calloc(size);
 
   final int result = bindings.hexRing(origin, k, out);
 
   if (result == 0) {
     final List<int> list = out.asTypedList(size).buffer.asUint64List().toList();
-    free(out);
+    calloc.free(out);
     return list;
   } else {
     if (result == 1) {
@@ -263,7 +263,7 @@ List<int> polyfill(GeoPolygon geoPolygon, int resolution) {
   final int size = bindings.maxPolyfillSize(native.geofence, native.geofenceNum,
       native.holes, native.holesSizes, native.holesNum, resolution);
 
-  final Pointer<Uint64> out = allocate(count: size);
+  final Pointer<Uint64> out = calloc(size);
   for (int i = 0; i < size; i++) {
     out.elementAt(i).value = 0;
   }
@@ -275,7 +275,7 @@ List<int> polyfill(GeoPolygon geoPolygon, int resolution) {
   final List<int> result = <int>[];
   uint64list.forEach(result.add);
 
-  free(out);
+  calloc.free(out);
   native.dispose();
 
   return result;

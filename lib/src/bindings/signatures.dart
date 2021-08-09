@@ -6,28 +6,51 @@ import 'dart:ffi';
 
 import 'types.dart';
 
-typedef geoToH3_native_t = Uint64 Function(Pointer<GeoCoordNative> g, Int32 res);
+// ignore: camel_case_types
+typedef geoToH3_native_t = Uint64 Function(
+    Pointer<GeoCoordNative> g, Int32 res);
 
+// ignore: camel_case_types
 typedef h3ToGeo_native_t = Void Function(Uint64 h3, Pointer<GeoCoordNative> g);
 
-typedef h3ToGeoBoundary_dart_native_t = Int32 Function(Uint64 h3, Pointer<GeoCoordNative> gp);
+// ignore: camel_case_types
+typedef h3ToGeoBoundary_dart_native_t = Int32 Function(
+    Uint64 h3, Pointer<GeoCoordNative> gp);
 
-typedef hexRange_native_t = Int32 Function(Uint64 origin, Int32 k, Pointer<Uint64> out);
+// ignore: camel_case_types
+typedef hexRange_native_t = Int32 Function(
+    Uint64 origin, Int32 k, Pointer<Uint64> out);
 
+// ignore: camel_case_types
 typedef hexRangeDistances_native_t = Int32 Function(
     Uint64 origin, Int32 k, Pointer<Uint64> out, Pointer<Int32> distances);
 
-typedef hexRanges_native_t = Int32 Function(Pointer<Uint64> h3Set, Int32 length, Int32 k, Pointer<Uint64> out);
+// ignore: camel_case_types
+typedef hexRanges_native_t = Int32 Function(
+    Pointer<Uint64> h3Set, Int32 length, Int32 k, Pointer<Uint64> out);
 
-typedef kRing_native_t = Void Function(Uint64 origin, Int32 k, Pointer<Uint64> out);
+// ignore: camel_case_types
+typedef kRing_native_t = Void Function(
+    Uint64 origin, Int32 k, Pointer<Uint64> out);
 
-typedef kRingDistances_native_t = Void Function(Uint64 origin, Int32 k, Pointer<Uint64> out, Pointer<Int32> distances);
+// ignore: camel_case_types
+typedef kRingDistances_native_t = Void Function(
+    Uint64 origin, Int32 k, Pointer<Uint64> out, Pointer<Int32> distances);
 
-typedef hexRing_native_t = Int32 Function(Uint64 origin, Int32 k, Pointer<Uint64> out);
+// ignore: camel_case_types
+typedef hexRing_native_t = Int32 Function(
+    Uint64 origin, Int32 k, Pointer<Uint64> out);
 
-typedef maxPolyfillSize_dart_native_t = Int32 Function(Pointer<GeoCoordNative> geofence, Int32 geofenceNum,
-    Pointer<Pointer<GeoCoordNative>> holes, Pointer<Int32> holesSizes, Int32 holesNum, Int32 res);
+// ignore: camel_case_types
+typedef maxPolyfillSize_dart_native_t = Int32 Function(
+    Pointer<GeoCoordNative> geofence,
+    Int32 geofenceNum,
+    Pointer<Pointer<GeoCoordNative>> holes,
+    Pointer<Int32> holesSizes,
+    Int32 holesNum,
+    Int32 res);
 
+// ignore: camel_case_types
 typedef polyfill_dart_native_t = Void Function(
     Pointer<GeoCoordNative> geofence,
     Int32 geofenceNum,

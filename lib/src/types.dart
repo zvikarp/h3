@@ -10,7 +10,7 @@ class GeoCoord {
   const GeoCoord({this.lat = 0.0, this.lon = 0.0});
 
   factory GeoCoord.degrees({double lat = 0.0, double lon = 0.0}) {
-    return GeoCoord(lat: degToRad(lat), lon: degToRad(lon));
+    return GeoCoord(lat: degToRad(lat) as double, lon: degToRad(lon) as double);
   }
 
   /// latitude in radians
@@ -19,9 +19,9 @@ class GeoCoord {
   /// longitude in radians
   final double lon;
 
-  double get latDeg => radToDeg(lat);
+  double get latDeg => radToDeg(lat) as double;
 
-  double get lonDeg => radToDeg(lon);
+  double get lonDeg => radToDeg(lon) as double;
 
   Pointer<GeoCoordNative> get _pointer => GeoCoordNative.create(lat, lon);
 

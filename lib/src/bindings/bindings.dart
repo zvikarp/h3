@@ -12,9 +12,9 @@ import 'signatures.dart';
 typedef LibraryLoader = DynamicLibrary Function(String name);
 
 class _H3Bindings {
-  DynamicLibrary h3;
+  late DynamicLibrary h3;
 
-  void initialize([LibraryLoader loader]) {
+  void initialize([LibraryLoader? loader]) {
     h3 = loader?.call('h3') ?? dlopenPlatformSpecific('h3');
 
     geoToH3 =
@@ -48,38 +48,39 @@ class _H3Bindings {
   }
 
   /// Find the H3 index of the resolution [res] cell containing the lat/lon [g]
-  int Function(Pointer<GeoCoordNative> g, int res) geoToH3;
+  late int Function(Pointer<GeoCoordNative> g, int res) geoToH3;
 
   /// Find the lat/lon center point g of the cell h3
-  void Function(int h3, Pointer<GeoCoordNative> g) h3ToGeo;
+  late void Function(int h3, Pointer<GeoCoordNative> g) h3ToGeo;
 
   /// Give the cell boundary in lat/lon coordinates for the cell h3
-  int Function(int h3, Pointer<GeoCoordNative> g) h3ToGeoBoundary;
+  late int Function(int h3, Pointer<GeoCoordNative> g) h3ToGeoBoundary;
 
   /// Hexagons neighbors in all directions, assuming no pentagons
-  int Function(int origin, int k, Pointer<Uint64> out) hexRange;
+  late int Function(int origin, int k, Pointer<Uint64> out) hexRange;
 
   /// Hexagon neighbors in all directions, reporting distance from origin
-  int Function(int origin, int k, Pointer<Uint64> out, Pointer<Int32> distances)
+  late int Function(
+          int origin, int k, Pointer<Uint64> out, Pointer<Int32> distances)
       hexRangeDistances;
 
   /// Collection of hex rings sorted by ring for all given hexagons
-  int Function(Pointer<Uint64> h3Set, int length, int k, Pointer<Uint64> out)
-      hexRanges;
+  late int Function(
+      Pointer<Uint64> h3Set, int length, int k, Pointer<Uint64> out) hexRanges;
 
   /// Hexagon neighbors in all directions
-  void Function(int origin, int k, Pointer<Uint64> out) kRing;
+  late void Function(int origin, int k, Pointer<Uint64> out) kRing;
 
   /// Hexagon neighbors in all directions, reporting distance from origin
-  void Function(
+  late void Function(
           int origin, int k, Pointer<Uint64> out, Pointer<Int32> distances)
       kRingDistances;
 
   /// Hollow hexagon ring at some origin
-  int Function(int origin, int k, Pointer<Uint64> out) hexRing;
+  late int Function(int origin, int k, Pointer<Uint64> out) hexRing;
 
   /// Maximum number of hexagons in the geofence
-  int Function(
+  late int Function(
     Pointer<GeoCoordNative> geofence,
     int geofenceNum,
     Pointer<Pointer<GeoCoordNative>> holes,
@@ -89,7 +90,7 @@ class _H3Bindings {
   ) maxPolyfillSize;
 
   /// Hexagons within the given geofence
-  void Function(
+  late void Function(
     Pointer<GeoCoordNative> geofence,
     int geofenceNum,
     Pointer<Pointer<GeoCoordNative>> holes,
@@ -100,6 +101,6 @@ class _H3Bindings {
   ) polyfill;
 }
 
-_H3Bindings _cachedBindings;
+_H3Bindings? _cachedBindings;
 
 _H3Bindings get bindings => _cachedBindings ??= _H3Bindings();
