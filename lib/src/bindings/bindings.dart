@@ -14,8 +14,8 @@ typedef LibraryLoader = DynamicLibrary Function(String name);
 class _H3Bindings {
   late DynamicLibrary h3;
 
-  void initialize([LibraryLoader? loader]) {
-    h3 = loader?.call('h3') ?? dlopenPlatformSpecific('h3');
+  void initialize() {
+    h3 = dlopenPlatformSpecific('h3');
 
     geoToH3 =
         h3.lookup<NativeFunction<geoToH3_native_t>>('geoToH3').asFunction();

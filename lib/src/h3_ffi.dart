@@ -5,10 +5,7 @@ class _H3 {
 
   void init() {
     assert(!_initialized);
-    LibraryLoader loader = (String name) => Platform.isAndroid
-        ? DynamicLibrary.open("lib$name.so")
-        : DynamicLibrary.process();
-    bindings.initialize(loader);
+    bindings.initialize();
     _initialized = true;
   }
 
